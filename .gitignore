@@ -1,0 +1,45 @@
+# PhpStorm / IntelliJ IDEA
+.idea/
+*.iml
+
+# OS-Dateien
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Environment-Dateien
+.env
+.env.local
+.env.*.local
+
+# Composer
+/vendor/
+
+# Node.js (falls verwendet)
+/node_modules/
+
+# Build-/Cache-Verzeichnisse
+/cache/
+/tmp/
+/var/cache/
+/var/log/
+/storage/logs/
+
+# PHPUnit
+.phpunit.result.cache
+
+# Coverage
+coverage/
+.clover.xml
+
+# Editor-Backups
+*~
+*.swp
+*.swo
+
+# Archive
+*.zip
+*.tar
+*.gz
