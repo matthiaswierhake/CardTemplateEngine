@@ -1,0 +1,20 @@
+/* ==========================================================
+   LSV EGGE - Responsive
+   ========================================================== */
+
+@media (max-width:768px){
+
+	.lsv-login-card{
+		max-width:92%;
+		padding:28px;
+	}
+
+	.lsv-redaktion-buttons{
+		flex-direction:column;
+	}
+
+	.lsv-admin-button{
+		justify-content:center;
+		width:100%;
+	}
+}
