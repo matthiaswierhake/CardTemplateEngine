@@ -1,0 +1,13 @@
+/* ==========================================================
+   LSV EGGE - Navigation
+   ========================================================== */
+
+body:not(.logged-in) .menu-login .dropdown-nav-toggle{
+	display:none !important;
+}
+
+.menu-login,
+.menu-member,
+.menu-logout{
+	white-space:nowrap;
+}

@@ -1,0 +1,159 @@
+/* ==========================================================
+   LSV EGGE - Login
+   ========================================================== */
+
+.page-id-251 #masthead,
+.page-id-251 .entry-hero{
+	display:none;
+}
+
+.page-id-251 .content-area{
+	margin-top:0;
+}
+
+.page-id-251 .site-main{
+	padding-top:40px;
+}
+
+.lsv-login-card{
+	max-width:480px;
+	margin:0 auto;
+	padding:40px;
+	background:rgba(255,255,255,.90);
+	border-radius:var(--lsv-radius-lg);
+	box-shadow:var(--lsv-shadow-lg);
+	backdrop-filter:blur(6px);
+}
+
+.lsv-login-card-logged-in{
+	text-align:center;
+}
+
+.lsv-login-form{
+	display:flex;
+	flex-direction:column;
+	gap:18px;
+}
+
+.lsv-field-label{
+	display:flex;
+	align-items:center;
+	gap:8px;
+	margin-bottom:0;
+	font-size:16px;
+	font-weight:600;
+	color:#0d3d73;
+}
+
+.lsv-input{
+	width:100%;
+	height:50px;
+	padding:12px 16px;
+	border:1px solid var(--lsv-input-border);
+	border-radius:var(--lsv-radius-sm);
+	font-size:17px;
+	box-sizing:border-box;
+	transition:var(--lsv-transition);
+}
+
+.lsv-input:focus{
+	border-color:var(--lsv-blue);
+	outline:none;
+	box-shadow:0 0 0 3px rgba(13,75,140,.15);
+}
+
+.lsv-password-wrap{
+	position:relative;
+	width:100%;
+}
+
+.lsv-password-wrap .lsv-input{
+	padding-right:60px;
+}
+
+.lsv-toggle-password{
+	position:absolute;
+	top:50%;
+	right:12px;
+	transform:translateY(-50%);
+	border:none;
+	border-radius:var(--lsv-radius-sm);
+	background:var(--lsv-blue);
+	color:#fff;
+	cursor:pointer;
+	transition:var(--lsv-transition);
+	display:flex;
+	justify-content:center;
+	align-items:center;
+	width:46px;
+	height:46px;
+
+}
+
+.lsv-toggle-password .dashicons{
+
+	font-size:28px;
+	width:28px;
+	height:28px;
+	line-height:28px;
+}
+
+.lsv-toggle-password:hover{
+	background:var(--lsv-blue-dark);
+}
+
+.lsv-remember{
+	display:flex;
+	align-items:center;
+	gap:10px;
+	font-size:15px;
+}
+
+.lsv-remember input{
+	width:auto;
+}
+
+.lsv-login-button{
+	width:100%;
+	height:52px;
+	font-size:18px;
+}
+
+.lsv-button-block{
+	display:block;
+	width:100%;
+	line-height:52px;
+	text-align:center;
+	text-decoration:none;
+}
+
+.lsv-button-secondary{
+	background:#666;
+}
+
+.lsv-button-secondary:hover{
+	background:#555;
+}
+
+.lsv-lost-password{
+	text-align:center;
+	margin-top:10px;
+}
+
+.lsv-lost-password a{
+	color:var(--lsv-blue);
+	text-decoration:none;
+}
+
+.lsv-lost-password a:hover{
+	text-decoration:underline;
+}
+
+.lsv-login-error{
+	margin-bottom:25px;
+	padding:15px;
+	border-radius:var(--lsv-radius-sm);
+	background:var(--lsv-danger-bg);
+	color:var(--lsv-danger);
+	border:1px solid var(--lsv-danger-border);
+}
