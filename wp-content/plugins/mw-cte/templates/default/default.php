@@ -1,5 +1,5 @@
 <?php
-/** @var \CTE\Card $card */
+/** @var \CTE\Includes\Card $card */
 /** @var array $atts */
 if (! defined('ABSPATH')) {
     exit;

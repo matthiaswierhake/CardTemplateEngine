@@ -1,0 +1,38 @@
+/* ==========================================================
+   CLUB EGGE - Redaktion
+   ========================================================== */
+
+.club-redaktion{
+	background:var(--club-blue-light);
+	border:1px solid var(--club-border);
+	border-radius:var(--club-radius-md);
+	padding:18px 22px;
+	margin-bottom:30px;
+}
+
+.club-redaktion strong{
+	display:block;
+	margin-bottom:15px;
+	color:#003b75;
+}
+
+.club-redaktion-buttons{
+	display:flex;
+	gap:15px;
+	flex-wrap:wrap;
+}
+
+.club-admin-button{
+	display:inline-flex;
+	align-items:center;
+	gap:8px;
+	padding:12px 20px;
+}
+
+.club-admin-button .dashicons{
+	font-size:20px;
+	width:20px;
+	height:20px;
+	line-height:20px;
+	margin:0;
+}

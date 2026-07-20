@@ -1,0 +1,70 @@
+<?php
+
+declare(strict_types=1);
+
+namespace CTE;
+
+use CTE\Includes\Card;
+use WP_Query;
+
+final class Renderer
+{
+    private ConfigLoader $configs;
+    private TemplateLoader $templates;
+
+    public function __construct(?ConfigLoader $configs = null, ?TemplateLoader $templates = null)
+    {
+        $this->configs = $configs ?? new ConfigLoader();
+        $this->templates = $templates ?? new TemplateLoader();
+    }
+
+    public function render(WP_Query $query, array $attributes): string
+    {
+        $type = sanitize_key((string) $attributes['type']);
+        $template = $this->resolveTemplateName($attributes);
+        $mapping = $this->configs->load($type);
+        $templatePath = $this->templates->locate($type, $template);
+
+        if ($templatePath === '') {
+            return '<p class="cte-message">' . esc_html__('Kein Kartentemplate gefunden.', 'card-template-engine') . '</p>';
+        }
+
+        if (! $query->have_posts()) {
+            return '<p class="cte-message">' . esc_html__('Keine Einträge gefunden.', 'card-template-engine') . '</p>';
+        }
+
+        wp_enqueue_style('cte-cards');
+
+        $columns = $attributes['columns'] === 'auto' ? 'auto' : max(1, min(6, (int) $attributes['columns']));
+        $minWidth = max(160, min(800, (int) $attributes['min_width']));
+        $style = sprintf('--cte-columns:%s;--cte-min-width:%dpx;', esc_attr((string) $columns), $minWidth);
+
+        ob_start();
+        echo '<div class="cte-grid" style="' . esc_attr($style) . '">';
+        while ($query->have_posts()) {
+            $query->the_post();
+            $post = get_post();
+            if (! $post) {
+                continue;
+            }
+            $card = new Card($post, $mapping);
+            $atts = $attributes;
+            include $templatePath;
+        }
+        echo '</div>';
+        wp_reset_postdata();
+
+        return (string) ob_get_clean();
+    }
+
+    private function resolveTemplateName(array $attributes): string
+    {
+        $template = sanitize_file_name((string) $attributes['template']);
+        if ($template !== '' && $template !== 'auto') {
+            return $template;
+        }
+
+        $category = sanitize_title((string) $attributes['category']);
+        return $category !== '' ? $category : 'default';
+    }
+}

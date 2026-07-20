@@ -4,21 +4,34 @@ declare(strict_types=1);
 
 namespace CTE;
 
+use CTE\Includes\Admin;
+use CTE\Shortcodes\Shortcode;
+
 final class Plugin
 {
+    /**
+     * Plugin starten
+     */
     public static function boot(): void
     {
-        add_action('wp_enqueue_scripts', [self::class, 'registerAssets']);
-        Shortcode::register();
+        self::registerAdmin();
+        self::registerShortcodes();
+        // Weitere Initialisierungen
+        // self::registerShortcodes();
+        // self::registerAssets();
+        // self::registerAjax();
+        // self::registerRestApi();
     }
 
-    public static function registerAssets(): void
+    /**
+     * Admin-Menü registrieren
+     */
+    private static function registerAdmin(): void
     {
-        wp_register_style(
-            'cte-cards',
-            CTE_URL . 'assets/css/cards.css',
-            [],
-            CTE_VERSION
-        );
+        (new Admin())->init();
+    }
+    private static function registerShortcodes(): void
+    {
+        (new Shortcode())->init();
     }
 }

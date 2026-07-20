@@ -1,1 +1,0 @@
-// LSV global JavaScript

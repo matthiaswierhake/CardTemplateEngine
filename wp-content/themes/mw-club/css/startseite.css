@@ -1,0 +1,12 @@
+/* ==========================================================
+   CLUB EGGE - Startseite
+   ========================================================== */
+
+.club-home-section{
+	margin-bottom:40px;
+}
+
+.club-home-grid{
+	display:grid;
+	gap:20px;
+}

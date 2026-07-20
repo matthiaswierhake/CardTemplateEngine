@@ -1,0 +1,32 @@
+/* ==========================================================
+   CLUB EGGE - Layout und Komponenten
+   ========================================================== */
+
+.club-card{
+	background:var(--club-white);
+	border:1px solid var(--club-border);
+	border-radius:var(--club-radius-lg);
+	box-shadow:var(--club-shadow-sm);
+	padding:30px;
+}
+
+.club-button,
+.club-admin-button,
+.club-login-button{
+	border:none;
+	border-radius:var(--club-radius-sm);
+	background:var(--club-blue);
+	color:#fff;
+	text-decoration:none;
+	font-weight:600;
+	cursor:pointer;
+	transition:var(--club-transition);
+}
+
+.club-button:hover,
+.club-admin-button:hover,
+.club-login-button:hover{
+	background:var(--club-blue-dark);
+	color:#fff;
+	transform:translateY(-2px);
+}

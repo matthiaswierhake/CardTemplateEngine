@@ -1,0 +1,17 @@
+/* ==========================================================
+   CLUB EGGE - Mitgliederbereich
+   ========================================================== */
+
+.club-member-grid{
+	display:grid;
+	gap:20px;
+}
+
+.club-member-tile{
+	background:var(--club-white);
+	border:1px solid var(--club-border);
+	border-radius:var(--club-radius-lg);
+	box-shadow:var(--club-shadow-sm);
+	padding:24px;
+	text-decoration:none;
+}
