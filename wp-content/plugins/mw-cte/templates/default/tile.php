@@ -7,9 +7,15 @@ declare(strict_types=1);
  * @var \CTE\Includes\Tile $tile
  */
 
+$featurePath = CTE_DIR
+        . 'templates/'
+        . $card->template()
+        . '/features/';
+
 ?>
 
 <article class="mw-cte-tile">
+
     <?php if ($tile->hasActions()) : ?>
 
         <div class="mw-cte-tile__actions">
@@ -19,7 +25,9 @@ declare(strict_types=1);
                 <a
                         class="mw-cte-tile__action mw-cte-tile__action--edit"
                         href="<?= esc_url($tile->editUrl()); ?>"
-                        title="Bearbeiten">
+                        title="Bearbeiten"
+                        aria-label="Beitrag bearbeiten"
+                >
 
                     <span class="dashicons dashicons-edit"></span>
 
@@ -27,15 +35,15 @@ declare(strict_types=1);
 
             <?php endif; ?>
 
-
             <?php if ($tile->canDelete()) : ?>
 
                 <a
                         class="mw-cte-tile__action mw-cte-tile__action--delete"
                         href="<?= esc_url($tile->deleteUrl()); ?>"
                         onclick="return confirm('Beitrag wirklich löschen?');"
+                        title="Löschen"
                         aria-label="Beitrag löschen"
-                        title="Löschen">
+                >
 
                     <span class="dashicons dashicons-trash"></span>
 
@@ -47,70 +55,43 @@ declare(strict_types=1);
 
     <?php endif; ?>
 
-    <?php if ($card->showImage() && $tile->hasThumbnail()) : ?>
+    <?php foreach ($card->featureObjects() as $feature) : ?>
 
-        <a
-            class="mw-cte-tile__image"
-            href="<?= esc_url($tile->permalink()); ?>"
-        >
+        <?php
+        if ($feature->position() !== 'before_content') {
+            continue;
+        }
 
-            <img
-                src="<?= esc_url($tile->thumbnail('medium_large')); ?>"
-                alt="<?= esc_attr($tile->title()); ?>">
+        $template = $featurePath
+                . $feature->template()
+                . '.php';
 
-        </a>
+        if (file_exists($template)) {
+            include $template;
+        }
+        ?>
 
-    <?php endif; ?>
-
+    <?php endforeach; ?>
 
     <div class="mw-cte-tile__content">
 
-        <h3 class="mw-cte-tile__title">
+        <?php foreach ($card->featureObjects() as $feature) : ?>
 
-            <a href="<?= esc_url($tile->permalink()); ?>">
+            <?php
+            if ($feature->position() !== 'content') {
+                continue;
+            }
 
-                <?= esc_html($tile->title()); ?>
+            $template = $featurePath
+                    . $feature->template()
+                    . '.php';
 
-            </a>
+            if (file_exists($template)) {
+                include $template;
+            }
+            ?>
 
-        </h3>
-
-
-        <?php if ($card->showDate()) : ?>
-
-            <div class="mw-cte-tile__date">
-
-                <?= esc_html($tile->date()); ?>
-
-            </div>
-
-        <?php endif; ?>
-
-
-        <?php if ($card->showExcerpt() && $tile->hasExcerpt()) : ?>
-
-            <div class="mw-cte-tile__excerpt">
-
-                <?= wp_kses_post($tile->excerpt()); ?>
-
-            </div>
-
-        <?php endif; ?>
-
-
-        <?php if ($card->showReadMore()) : ?>
-
-            <p class="mw-cte-tile__more">
-
-                <a href="<?= esc_url($tile->permalink()); ?>">
-
-                    Weiterlesen →
-
-                </a>
-
-            </p>
-
-        <?php endif; ?>
+        <?php endforeach; ?>
 
     </div>
 

@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace CTE\Includes;
 
+use CTE\Features\Feature;
+use CTE\Features\FeatureRegistry;
+
 final class Card
 {
     /*
@@ -36,10 +39,12 @@ final class Card
     private string $template;
     private int $columns;
 
-    private bool $showImage;
-    private bool $showDate;
-    private bool $showExcerpt;
-    private bool $showReadMore;
+    /**
+     * Aktivierte Features.
+     *
+     * @var string[]
+     */
+    private array $features = [];
 
     private string $cssClass;
     private string $id;
@@ -67,22 +72,63 @@ final class Card
         string $id = ''
     ) {
 
+        /*
+         |--------------------------------------------------------------------------
+         | Datenquelle
+         |--------------------------------------------------------------------------
+         */
+
         $this->source = $source;
         $this->value = $value;
         $this->taxonomy = $taxonomy;
+
+        /*
+         |--------------------------------------------------------------------------
+         | Query
+         |--------------------------------------------------------------------------
+         */
 
         $this->limit = $limit;
         $this->orderby = $orderby;
         $this->order = strtoupper($order);
 
+        /*
+         |--------------------------------------------------------------------------
+         | Darstellung
+         |--------------------------------------------------------------------------
+         */
+
         $this->title = $title;
         $this->template = $template;
         $this->columns = max(1, $columns);
 
-        $this->showImage = $showImage;
-        $this->showDate = $showDate;
-        $this->showExcerpt = $showExcerpt;
-        $this->showReadMore = $showReadMore;
+        /*
+         |--------------------------------------------------------------------------
+         | Feature-Liste erzeugen
+         |--------------------------------------------------------------------------
+         */
+
+        if ($showImage) {
+            $this->addFeature('image');
+        }
+
+        if ($showDate) {
+            $this->addFeature('date');
+        }
+
+        if ($showExcerpt) {
+            $this->addFeature('excerpt');
+        }
+
+        if ($showReadMore) {
+            $this->addFeature('readmore');
+        }
+
+        /*
+         |--------------------------------------------------------------------------
+         | Sonstiges
+         |--------------------------------------------------------------------------
+         */
 
         $this->cssClass = $cssClass;
         $this->id = $id;
@@ -151,24 +197,101 @@ final class Card
         return $this->columns;
     }
 
+    /**
+     * Aktivierte Features.
+     *
+     * @return string[]
+     */
+    public function features(): array
+    {
+        return $this->features;
+    }
+
+    /**
+     * Aktivierte Features als Feature-Objekte.
+     *
+     * @return Feature[]
+     */
+    public function featureObjects(): array
+    {
+        $features = [];
+
+        foreach ($this->features as $key) {
+
+            $feature = FeatureRegistry::get($key);
+
+            if ($feature !== null) {
+                $features[] = $feature;
+            }
+        }
+
+        return $features;
+    }
+
+    public function hasFeature(string $feature): bool
+    {
+        return in_array($feature, $this->features, true);
+    }
+
+    public function addFeature(string $feature): self
+    {
+        if (
+            FeatureRegistry::has($feature)
+            && !$this->hasFeature($feature)
+        ) {
+            $this->features[] = $feature;
+        }
+
+        return $this;
+    }
+
+    public function removeFeature(string $feature): self
+    {
+        $this->features = array_values(
+            array_filter(
+                $this->features,
+                static fn(string $item): bool => $item !== $feature
+            )
+        );
+
+        return $this;
+    }
+
+    /**
+     * @param string[] $features
+     */
+    public function setFeatures(array $features): self
+    {
+        $this->features = [];
+
+        foreach (array_unique($features) as $feature) {
+
+            if (FeatureRegistry::has($feature)) {
+                $this->features[] = $feature;
+            }
+        }
+
+        return $this;
+    }
+
     public function showImage(): bool
     {
-        return $this->showImage;
+        return $this->hasFeature('image');
     }
 
     public function showDate(): bool
     {
-        return $this->showDate;
+        return $this->hasFeature('date');
     }
 
     public function showExcerpt(): bool
     {
-        return $this->showExcerpt;
+        return $this->hasFeature('excerpt');
     }
 
     public function showReadMore(): bool
     {
-        return $this->showReadMore;
+        return $this->hasFeature('readmore');
     }
 
     public function cssClass(): string
@@ -190,27 +313,72 @@ final class Card
     public function toArray(): array
     {
         return [
-            'source'         => $this->source,
-            'value'          => $this->value,
-            'taxonomy'       => $this->taxonomy,
 
-            'limit'          => $this->limit,
-            'orderby'        => $this->orderby,
-            'order'          => $this->order,
+            /*
+             |--------------------------------------------------------------
+             | Datenquelle
+             |--------------------------------------------------------------
+             */
 
-            'title'          => $this->title,
-            'template'       => $this->template,
-            'columns'        => $this->columns,
+            'source'   => $this->source,
+            'value'    => $this->value,
+            'taxonomy' => $this->taxonomy,
 
-            'showImage'      => $this->showImage,
-            'showDate'       => $this->showDate,
-            'showExcerpt'    => $this->showExcerpt,
-            'showReadMore'   => $this->showReadMore,
+            /*
+             |--------------------------------------------------------------
+             | Query
+             |--------------------------------------------------------------
+             */
 
-            'cssClass'       => $this->cssClass,
-            'id'             => $this->id,
+            'limit'    => $this->limit,
+            'orderby'  => $this->orderby,
+            'order'    => $this->order,
+
+            /*
+             |--------------------------------------------------------------
+             | Darstellung
+             |--------------------------------------------------------------
+             */
+
+            'title'    => $this->title,
+            'template' => $this->template,
+            'columns'  => $this->columns,
+
+            /*
+             |--------------------------------------------------------------
+             | Features
+             |--------------------------------------------------------------
+             */
+
+            'features' => $this->features,
+
+            /*
+             |--------------------------------------------------------------
+             | Legacy-Kompatibilität
+             |--------------------------------------------------------------
+             */
+
+            'showImage'    => $this->showImage(),
+            'showDate'     => $this->showDate(),
+            'showExcerpt'  => $this->showExcerpt(),
+            'showReadMore' => $this->showReadMore(),
+
+            /*
+             |--------------------------------------------------------------
+             | Sonstiges
+             |--------------------------------------------------------------
+             */
+
+            'cssClass' => $this->cssClass,
+            'id'       => $this->id,
         ];
     }
+
+    /*
+     |--------------------------------------------------------------------------
+     | Aktionen
+     |--------------------------------------------------------------------------
+     */
 
     /**
      * Darf der aktuelle Benutzer Beiträge dieses Card-Typs erstellen?
@@ -235,12 +403,7 @@ final class Card
 
             case 'category':
             case 'tag':
-                $postType = 'post';
-                break;
-
             case 'taxonomy':
-                // Aktuell verwenden Taxonomie-Cards den Standard-Post-Type.
-                // Falls später nötig, kann hier eine Zuordnung ergänzt werden.
                 $postType = 'post';
                 break;
         }

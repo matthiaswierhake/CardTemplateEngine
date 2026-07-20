@@ -18,7 +18,6 @@ final class TestRunner
 
         echo '<div class="wrap">';
         echo '<h1>MW Card Template Engine - Tests</h1>';
-
         switch (sanitize_key($_GET['cte-test'])) {
 
             case 'card':
@@ -31,6 +30,14 @@ final class TestRunner
 
             case 'tile':
                 TileTest::run();
+                break;
+
+            case 'feature':
+                FeatureTest::run();
+                break;
+
+            case 'features':
+                FeatureRegistryTest::run();
                 break;
 
             default:
