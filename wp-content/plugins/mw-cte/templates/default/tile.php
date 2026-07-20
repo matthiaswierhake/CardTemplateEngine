@@ -10,6 +10,42 @@ declare(strict_types=1);
 ?>
 
 <article class="mw-cte-tile">
+    <?php if ($tile->hasActions()) : ?>
+
+        <div class="mw-cte-tile__actions">
+
+            <?php if ($tile->canEdit()) : ?>
+
+                <a
+                        class="mw-cte-tile__action mw-cte-tile__action--edit"
+                        href="<?= esc_url($tile->editUrl()); ?>"
+                        title="Bearbeiten">
+
+                    <span class="dashicons dashicons-edit"></span>
+
+                </a>
+
+            <?php endif; ?>
+
+
+            <?php if ($tile->canDelete()) : ?>
+
+                <a
+                        class="mw-cte-tile__action mw-cte-tile__action--delete"
+                        href="<?= esc_url($tile->deleteUrl()); ?>"
+                        onclick="return confirm('Beitrag wirklich löschen?');"
+                        aria-label="Beitrag löschen"
+                        title="Löschen">
+
+                    <span class="dashicons dashicons-trash"></span>
+
+                </a>
+
+            <?php endif; ?>
+
+        </div>
+
+    <?php endif; ?>
 
     <?php if ($card->showImage() && $tile->hasThumbnail()) : ?>
 

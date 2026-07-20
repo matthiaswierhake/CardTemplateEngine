@@ -56,6 +56,14 @@ final class Tile
     }
 
     /**
+     * Autor-ID.
+     */
+    public function authorId(): int
+    {
+        return (int) $this->post->post_author;
+    }
+
+    /**
      * Veröffentlichungsdatum.
      */
     public function date(string $format = ''): string
@@ -183,5 +191,34 @@ final class Tile
         }
 
         return get_fields($this->post->ID) ?: [];
+    }
+
+    public function canEdit(): bool
+    {
+        return current_user_can('edit_post', $this->id());
+    }
+
+    public function canDelete(): bool
+    {
+        return current_user_can('delete_post', $this->id());
+    }
+
+    public function editUrl(): string
+    {
+        return (string) get_edit_post_link($this->id());
+    }
+
+    public function deleteUrl(): string
+    {
+        return (string) get_delete_post_link(
+            $this->id(),
+            '',
+            true
+        );
+    }
+
+    public function hasActions(): bool
+    {
+        return $this->canEdit() || $this->canDelete();
     }
 }

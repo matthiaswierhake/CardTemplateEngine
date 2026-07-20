@@ -1,120 +1,230 @@
-.cte-grid {
+/*
+|--------------------------------------------------------------------------
+| MW CTE
+| Basis
+|--------------------------------------------------------------------------
+*/
+
+.mw-cte-card {
+    width: 100%;
+}
+
+.mw-cte-card__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.mw-cte-card__title {
+    margin: 0;
+}
+
+.mw-cte-card__grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(min(100%, var(--cte-min-width, 280px)), 1fr));
     gap: 1.5rem;
-    width: 100%;
-    min-width: 0;
 }
 
-.cte-grid[style*="--cte-columns:1"] { grid-template-columns: minmax(0, 1fr); }
-.cte-grid[style*="--cte-columns:2"] { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-.cte-grid[style*="--cte-columns:3"] { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-.cte-grid[style*="--cte-columns:4"] { grid-template-columns: repeat(4, minmax(0, 1fr)); }
-.cte-grid[style*="--cte-columns:5"] { grid-template-columns: repeat(5, minmax(0, 1fr)); }
-.cte-grid[style*="--cte-columns:6"] { grid-template-columns: repeat(6, minmax(0, 1fr)); }
+.mw-cte-card__grid.columns-1 {
+    grid-template-columns: 1fr;
+}
 
-.cte-card {
+.mw-cte-card__grid.columns-2 {
+    grid-template-columns: repeat(2, 1fr);
+}
+
+.mw-cte-card__grid.columns-3 {
+    grid-template-columns: repeat(3, 1fr);
+}
+
+.mw-cte-card__grid.columns-4 {
+    grid-template-columns: repeat(4, 1fr);
+}
+
+.mw-cte-card__grid.columns-5 {
+    grid-template-columns: repeat(5, 1fr);
+}
+
+.mw-cte-card__grid.columns-6 {
+    grid-template-columns: repeat(6, 1fr);
+}
+
+
+/*
+|--------------------------------------------------------------------------
+| Card Action (Neuer Beitrag)
+|--------------------------------------------------------------------------
+*/
+
+.mw-cte-card__new {
     display: flex;
-    flex-direction: column;
-    min-width: 0;
-    overflow: hidden;
-    background: #fff;
-    border: 1px solid rgba(0, 0, 0, .12);
-    border-radius: .75rem;
-    box-shadow: 0 .25rem 1rem rgba(0, 0, 0, .08);
-}
-
-.cte-card__media {
-    display: block;
-    aspect-ratio: 16 / 9;
-    overflow: hidden;
-    background: #eee;
-}
-
-.cte-card__image {
-    display: block;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-}
-
-.cte-card__body {
-    display: flex;
-    flex: 1;
-    flex-direction: column;
-    gap: .75rem;
-    min-width: 0;
-    padding: 1rem;
-}
-
-.cte-card__meta {
-    font-size: .875rem;
-    opacity: .7;
-}
-
-.cte-card__title {
-    margin: 0;
-    font-size: clamp(1.125rem, 2vw, 1.5rem);
-    line-height: 1.25;
-    overflow-wrap: normal;
-    word-break: normal;
-    hyphens: auto;
-}
-
-.cte-card__title a {
-    color: inherit;
-    text-decoration: none;
-}
-
-.cte-card__teaser,
-.cte-card__content {
-    margin: 0;
-    line-height: 1.55;
-    overflow-wrap: break-word;
-}
-
-.cte-card__content > :first-child { margin-top: 0; }
-.cte-card__content > :last-child { margin-bottom: 0; }
-
-.cte-card__actions {
-    display: flex;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: .75rem;
-    margin-top: auto;
-}
-
-.cte-card__button,
-.cte-card__edit {
-    display: inline-flex;
-    align-items: center;
     justify-content: center;
-    white-space: nowrap;
-    text-decoration: none;
+    align-items: center;
+
+    width: 34px;
+    height: 34px;
+
+    border-radius: 50%;
+
+    background: #f3f6fb;
+    color: #2271b1;
+
+    text-decoration: none !important;
+
+    transition: all .2s ease;
 }
 
-.cte-card__button {
-    padding: .65rem 1rem;
-    border-radius: .4rem;
-    background: #1e73be;
+.mw-cte-card__new:hover {
+    background: #2271b1;
     color: #fff;
 }
 
-.cte-card__edit {
+.mw-cte-card__new .dashicons {
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+    line-height: 18px;
+}
+
+
+/*
+|--------------------------------------------------------------------------
+| Tile
+|--------------------------------------------------------------------------
+*/
+
+.mw-cte-tile {
+    position: relative;
+}
+
+.mw-cte-tile__image img {
+    display: block;
+    width: 100%;
+    height: auto;
+}
+
+.mw-cte-tile__content {
+    margin-top: .75rem;
+}
+
+.mw-cte-tile__title {
+    margin: 0 0 .5rem;
+}
+
+.mw-cte-tile__title a {
+    text-decoration: none;
+}
+
+.mw-cte-tile__date {
+    margin-bottom: .75rem;
     font-size: .9rem;
+    opacity: .7;
 }
 
-.cte-message { margin: 1rem 0; }
+.mw-cte-tile__excerpt {
+    margin-bottom: .75rem;
+}
 
-@media (max-width: 900px) {
-    .cte-grid[style*="--cte-columns:3"],
-    .cte-grid[style*="--cte-columns:4"],
-    .cte-grid[style*="--cte-columns:5"],
-    .cte-grid[style*="--cte-columns:6"] {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
+.mw-cte-tile__more a {
+    text-decoration: none;
+}
+
+
+/*
+|--------------------------------------------------------------------------
+| Tile Actions
+|--------------------------------------------------------------------------
+*/
+
+.mw-cte-tile__actions {
+    display: flex;
+    gap: .35rem;
+    margin-bottom: .5rem;
+}
+
+.mw-cte-tile__action {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    width: 28px;
+    height: 28px;
+
+    border-radius: 4px;
+
+    background: #f3f6fb;
+
+    text-decoration: none !important;
+
+    transition: all .2s ease;
+}
+
+.mw-cte-tile__action:hover,
+.mw-cte-tile__action:focus {
+    text-decoration: none !important;
+}
+
+.mw-cte-tile__action .dashicons {
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+    line-height: 18px;
+}
+
+
+/*
+|--------------------------------------------------------------------------
+| Edit
+|--------------------------------------------------------------------------
+*/
+
+.mw-cte-tile__action--edit {
+    color: #2271b1;
+}
+
+.mw-cte-tile__action--edit:hover {
+    background: #2271b1;
+    color: #fff;
+}
+
+
+/*
+|--------------------------------------------------------------------------
+| Delete
+|--------------------------------------------------------------------------
+*/
+
+.mw-cte-tile__action--delete {
+    color: #d63638;
+}
+
+.mw-cte-tile__action--delete:hover {
+    background: #d63638;
+    color: #fff;
+}
+
+
+/*
+|--------------------------------------------------------------------------
+| Responsive
+|--------------------------------------------------------------------------
+*/
+
+@media (max-width: 992px) {
+
+    .mw-cte-card__grid.columns-3,
+    .mw-cte-card__grid.columns-4,
+    .mw-cte-card__grid.columns-5,
+    .mw-cte-card__grid.columns-6 {
+        grid-template-columns: repeat(2, 1fr);
     }
+
 }
 
-@media (max-width: 600px) {
-    .cte-grid { grid-template-columns: minmax(0, 1fr) !important; }
+@media (max-width: 640px) {
+
+    .mw-cte-card__grid {
+        grid-template-columns: 1fr !important;
+    }
+
 }

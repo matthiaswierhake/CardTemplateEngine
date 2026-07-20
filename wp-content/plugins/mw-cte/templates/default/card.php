@@ -22,6 +22,20 @@ declare(strict_types=1);
                 <?= esc_html($card->title()); ?>
             </h2>
 
+            <?php if ($card->canCreate()) : ?>
+
+                <a
+                        class="mw-cte-card__new"
+                        href="<?= esc_url($card->newPostUrl()); ?>"
+                        title="Neuen Beitrag erstellen"
+                        aria-label="Neuen Beitrag erstellen">
+
+                    <span class="dashicons dashicons-plus-alt2"></span>
+
+                </a>
+
+            <?php endif; ?>
+
         </header>
 
     <?php endif; ?>

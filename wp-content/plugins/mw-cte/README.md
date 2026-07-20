@@ -1,86 +1,545 @@
-# Card Template Engine 0.3.0
+# MW CTE – Card Template Engine
 
-Vollständig lauffähiges WordPress-Plugin für Karten aus Custom Post Types und ACF-Feldern.
+MW CTE ist ein WordPress-Plugin zur flexiblen Darstellung von Inhalten in Form von Dashboards, Columns, Cards und Tiles.
 
-## Installation
+Die Engine trennt konsequent:
 
-ZIP über **Plugins → Installieren → Plugin hochladen** installieren und aktivieren.
+- Konfiguration
+- Datenbeschaffung
+- Rendering
+- Templates
 
-## Basis-Shortcode
+Dadurch können Datenquellen und Darstellung unabhängig voneinander erweitert werden.
 
-```text
-[cte_cards type="news"]
+---
+
+# Projektumgebung
+
+## WordPress
+
+Aktuelle WordPress-Version
+
+## Theme
+
+Kadence Theme
+
+## Child Theme
+
+MW Club
+
+Das Child Theme enthält ausschließlich projektspezifische Funktionen.
+
+Namenskonventionen:
+
+Funktionen
+
+```
+club_*
 ```
 
-Einspaltig:
+Konstanten
 
-```text
-[cte_cards type="news" columns="1"]
+```
+CLUB_*
 ```
 
-Mit voller WYSIWYG-Ausgabe:
+Das Plugin darf keine Funktionen aus dem Child Theme voraussetzen.
 
-```text
-[cte_cards type="news" template="full" columns="1"]
+Die Kommunikation erfolgt ausschließlich über WordPress.
+
+---
+
+# Plugin
+
+Name
+
+```
+MW CTE
 ```
 
-Mit Kategorie:
+Namespace
 
-```text
-[cte_cards type="news" taxonomy="news-kategorie" category="flugbetrieb" limit="3"]
+```
+CTE
 ```
 
-## Wichtig: Keine Feldnamen im Template
+Funktionspräfix
 
-Das universelle Template arbeitet nur mit Slots wie `title`, `image`, `teaser`, `content` und `date`.
-Die konkreten ACF-Feldnamen stehen ausschließlich in:
-
-```text
-config/news.php
+```
+mw_cte_
 ```
 
-Aktuelles News-Mapping:
+Konstanten
 
-- `image` → ACF `titelbild`
-- `teaser` → ACF `teaser`
-- `content` → ACF `langtext`
-- `date` → ACF `datum`
-- `author` → ACF `autor`
-
-## Eigene Feldnamen verwenden
-
-Kopiere `config/news.php` ins Child-Theme:
-
-```text
-wp-content/themes/DEIN-CHILD-THEME/card-template-engine/config/news.php
+```
+CTE_VERSION
+CTE_FILE
+CTE_DIR
+CTE_URL
 ```
 
-Dort kannst du das Mapping ändern, ohne das Plugin anzufassen.
+---
 
-## Eigenes Kartendesign
+# Ziel
 
-Kopiere ein Template ins Child-Theme:
+Die Engine soll beliebige Inhalte darstellen können.
 
-```text
-wp-content/themes/DEIN-CHILD-THEME/card-template-engine/news/default.php
+Beispiele
+
+- News
+- Veranstaltungen
+- Mitarbeiter
+- Dokumente
+- Produkte
+- Vereinsinformationen
+
+Die Engine soll unabhängig vom Theme funktionieren.
+
+---
+
+# Architektur
+
+```
+Dashboard
+    │
+    ▼
+Column
+    │
+    ▼
+Card
+    │
+    ▼
+Tile
 ```
 
-Im Template steht das Objekt `$card` zur Verfügung, z. B.:
+## Dashboard
 
-```php
-$card->text('title');
-$card->image('image');
-$card->excerpt('teaser', 'content', 28);
-$card->html('content');
-$card->url('url');
+Eine Seite.
+
+Besteht aus mehreren Columns.
+
+## Column
+
+Container.
+
+Enthält mehrere Cards.
+
+## Card
+
+Konfiguration einer Ausgabe.
+
+Beschreibt
+
+- Datenquelle
+- Darstellung
+
+Card enthält keine Daten.
+
+Card enthält keine Renderinglogik.
+
+## Tile
+
+Repräsentiert genau einen Datensatz.
+
+Ist ein Wrapper um
+
+```
+WP_Post
 ```
 
-## Kategorieabhängige Templates
+und bietet komfortable Methoden.
 
-Mit `template="auto"` und `category="flugbetrieb"` sucht CTE nach:
+---
 
-```text
-card-template-engine/news/flugbetrieb.php
+# Ablauf
+
+```
+WordPress
+
+↓
+
+mw-cte.php
+
+↓
+
+Autoloader
+
+↓
+
+Plugin::boot()
+
+↓
+
+Shortcode
+
+↓
+
+Card
+
+↓
+
+Renderer
+
+↓
+
+Query
+
+↓
+
+WP_Query
+
+↓
+
+WP_Post[]
+
+↓
+
+Tile[]
+
+↓
+
+card.php
+
+↓
+
+tile.php
 ```
 
-Fallback ist `default.php`.
+---
+
+# Verantwortlichkeiten
+
+## mw-cte.php
+
+Pluginstart
+
+- Konstanten
+- Autoloader laden
+- Plugin starten
+
+---
+
+## Autoloader
+
+Registriert den PHP-Autoloader.
+
+Lädt Klassen automatisch.
+
+Enthält keine Pluginlogik.
+
+---
+
+## Plugin
+
+Initialisiert Komponenten.
+
+Aktuell
+
+- Admin
+- Shortcodes
+
+Später
+
+- REST
+- CLI
+- Cron
+- Dashboard Loader
+
+---
+
+## Admin
+
+Backend.
+
+Registriert
+
+- Dashboard
+- Cards
+- Templates
+- Tests
+- Einstellungen
+
+---
+
+## Shortcode
+
+Einstieg ins Frontend.
+
+Erzeugt eine Card.
+
+Übergibt sie an den Renderer.
+
+---
+
+## Card
+
+Reine Konfiguration.
+
+Beispiel
+
+- Quelle
+- Limit
+- Sortierung
+- Template
+- Spalten
+- Bild anzeigen
+- Datum anzeigen
+- Excerpt anzeigen
+
+Keine Logik.
+
+---
+
+## Query
+
+Übersetzt eine Card in eine
+
+```
+WP_Query
+```
+
+Lädt die Daten.
+
+---
+
+## Tile
+
+Wrapper für
+
+```
+WP_Post
+```
+
+Stellt Methoden bereit.
+
+Beispiele
+
+```
+title()
+
+permalink()
+
+excerpt()
+
+thumbnail()
+
+field()
+
+categories()
+```
+
+Templates verwenden ausschließlich Tile.
+
+Nicht direkt WordPress.
+
+---
+
+## Renderer
+
+Koordiniert den Ablauf.
+
+```
+Card
+
+↓
+
+Query
+
+↓
+
+Tile[]
+
+↓
+
+card.php
+```
+
+Renderer erzeugt selbst kein HTML.
+
+---
+
+## card.php
+
+Komplette Card.
+
+Aufgabe
+
+- Überschrift
+- Wrapper
+- Grid
+- Tiles ausgeben
+
+---
+
+## tile.php
+
+Ein einzelner Datensatz.
+
+Aufgabe
+
+- Bild
+- Titel
+- Datum
+- Excerpt
+- Weiterlesen
+
+---
+
+# Templates
+
+```
+templates/
+
+    default/
+
+        card.php
+
+        tile.php
+```
+
+Neue Templates können ergänzt werden.
+
+Beispiele
+
+```
+news/
+
+calendar/
+
+gallery/
+
+staff/
+```
+
+---
+
+# Datenfluss
+
+```
+Card
+
+↓
+
+Query
+
+↓
+
+WP_Post
+
+↓
+
+Tile
+
+↓
+
+Template
+```
+
+---
+
+# Grundprinzip
+
+Die Engine trennt drei Ebenen.
+
+## 1. Konfiguration
+
+```
+Card
+```
+
+## 2. Daten
+
+```
+Query
+
+↓
+
+Tile
+```
+
+## 3. Darstellung
+
+```
+Renderer
+
+↓
+
+card.php
+
+↓
+
+tile.php
+```
+
+Diese Ebenen dürfen möglichst unabhängig bleiben.
+
+---
+
+# Entwicklungsregeln
+
+- Strict Types verwenden
+- Namespace CTE
+- Keine globale Logik
+- Kleine Klassen
+- Eine Aufgabe pro Klasse
+- Keine HTML-Ausgabe außerhalb der Templates
+- Renderer enthält keine Darstellung
+- Card enthält keine Logik
+- Query kennt keine Templates
+- Templates kennen keine WP_Query
+
+---
+
+# Projektstatus
+
+## Fertig
+
+- Bootstrap
+- Autoloader
+- Plugin
+- Admin
+- Shortcode
+- Card
+- Query
+- Tile
+- Renderer
+- card.php
+- tile.php
+- Testcenter
+
+## Geplant
+
+- Dashboard Loader
+- Column Loader
+- Config Loader
+- Template Loader
+- Dashboard-Konfiguration
+- Card-Konfiguration
+- Backend Editor
+- CSS-System
+- Template-Auswahl
+- REST API
+
+---
+
+# Langfristiges Ziel
+
+Die komplette Ausgabe einer Seite soll ausschließlich über Konfiguration aufgebaut werden.
+
+Beispiel
+
+```
+Dashboard
+
+    Column
+
+        Card
+
+            Query
+
+            Template
+
+            Optionen
+```
+
+Der PHP-Code der Engine soll dabei möglichst unverändert bleiben.

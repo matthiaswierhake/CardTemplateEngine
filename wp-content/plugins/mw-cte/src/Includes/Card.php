@@ -211,4 +211,42 @@ final class Card
             'id'             => $this->id,
         ];
     }
+
+    /**
+     * Darf der aktuelle Benutzer Beiträge dieses Card-Typs erstellen?
+     */
+    public function canCreate(): bool
+    {
+        return current_user_can('edit_posts');
+    }
+
+    /**
+     * URL zum Anlegen eines neuen Beitrags.
+     */
+    public function newPostUrl(): string
+    {
+        $postType = 'post';
+
+        switch ($this->source()) {
+
+            case 'post_type':
+                $postType = $this->value();
+                break;
+
+            case 'category':
+            case 'tag':
+                $postType = 'post';
+                break;
+
+            case 'taxonomy':
+                // Aktuell verwenden Taxonomie-Cards den Standard-Post-Type.
+                // Falls später nötig, kann hier eine Zuordnung ergänzt werden.
+                $postType = 'post';
+                break;
+        }
+
+        return admin_url(
+            'post-new.php?post_type=' . $postType
+        );
+    }
 }
